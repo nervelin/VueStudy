@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <!-- v-on:事件类型="业务逻辑||函数名" -->
+        <button v-on:click="dothis">按钮</button>
+        <button v-on:click="msg = 456">按钮1</button>{{msg}}
+        <!-- <button v-on:click="alert(111)">按钮1</button> -->
+        <input type="text" v-model="num">
+        <button v-on:click="add">按钮3+100</button>
+        <button v-on:click="add2(150,$event)">按钮3+100</button>
+    </div>
+    <script src="js/vue.js"></script>
+    <script>
+        const vm = new Vue({
+            el: "#app",
+            data: {
+                msg: 123,
+                num: 10
+            },
+            methods: {
+                dothis: function() {
+                    alert(111)
+                },
+                add(event) {
+                    var res = event.target.innerHTML
+                    console.log(res.substring(res.indexOf("+") + 1));
+                    this.num += parseInt(res.substring(res.indexOf("+") + 1))
+                },
+                add2(a, event) {
+                    var res = event.target.innerHTML
+                    a += parseInt(res.substring(res.indexOf("+") + 1))
+                    console.log(a);
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

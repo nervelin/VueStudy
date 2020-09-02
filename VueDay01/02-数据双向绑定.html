@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="js/vue.js"></script>
+    <style>
+        /* 解决闪动问题 */
+        
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        {{msg}}
+        <p v-text="msg1"></p>
+        <p v-html="msg2"></p>
+        <p>{{number}}</p>
+        <p v-once>{{number}}</p>
+        <input type="text" v-model="msg">
+    </div>
+    <script>
+        const vm = new Vue({
+            el: "#app",
+            data: {
+                msg: "开始Vue",
+                msg1: "指令练习",
+                msg2: "<em>v-html解析标签</em>",
+                number: 10
+            }
+        })
+    </script>
+</body>
+
+</html>

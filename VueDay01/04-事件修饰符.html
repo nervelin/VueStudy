@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+    <title>Document</title>
+    <style>
+        #app {
+            width: 200px;
+            height: 200px;
+            background-color: aqua;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='app'>
+        <div @click="divHandler">
+            <button @click.stop="btnHandler">按钮</button>
+            <a href="https://www.baidu.com/" @click.prevent.stop="aHandler">百度</a>
+        </div>
+    </div>
+    <script src='js/vue.js'></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {},
+            methods: {
+                btnHandler() {
+                    console.log("触发了按钮的事件");
+                },
+                divHandler() {
+                    console.log("触发了div事件");
+                },
+                aHandler() {
+                    console.log("触发了a链接的事件");
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>
