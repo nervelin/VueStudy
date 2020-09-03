@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id='app'>
+        <!-- 文本框 -->
+        <input type="text" v-model="msg">{{msg}}
+        <hr>
+        <!-- 单选框绑定的是布尔值 -->
+        <input type="radio" v-model="sex" value="0">男
+        <input type="radio" v-model="sex" value="1">女{{sex}}
+        <hr>
+        <!-- 复选框绑定的是数组 -->
+        <input type="checkbox" v-model="hobby" value="one">吃饭
+        <input type="checkbox" v-model="hobby" value="two">睡觉
+        <input type="checkbox" v-model="hobby" value="three">敲代码 {{hobby}}
+        <hr>
+        <!-- 下拉框 -->
+        <!-- 单个的是值，多选是数组 -->
+        <select v-model="subject">
+            <option value="0">语文</option>
+            <option value="1">数学</option>{{subject}}
+        </select>
+    </div>
+    <script src='./vue.js'></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                msg: "数据",
+                sex: "0",
+                hobby: ["one"],
+                subject: "0"
+            },
+            methods: {},
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+    <title>Document</title>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='app' v-cloak>
+        {{bigStr}}
+    </div>
+    <script src='./vue.js'></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                msg: "hello"
+            },
+            methods: {},
+            // 计算属性形式上是一个函数，最终使用的时候当属性来使用
+            // 计算属性是基于data中的数据进行运行的，data发生改变时，计算属性会重新执行
+            // 计算属性会有缓存，而方法不会有缓存
+            computed: {
+                bigStr: function() {
+                    return this.msg.toUpperCase()
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
