@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style type="text/css">
+        .grid {
+            margin: auto;
+            width: 530px;
+            text-align: center;
+        }
+        
+        .grid table {
+            border-top: 1px solid #C2D89A;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .grid th,
+        td {
+            padding: 10;
+            border: 1px dashed #F3DCAB;
+            height: 35px;
+            line-height: 35px;
+        }
+        
+        .grid th {
+            background-color: #F3DCAB;
+        }
+        
+        .grid .book {
+            padding-bottom: 10px;
+            padding-top: 5px;
+            background-color: #F3DCAB;
+        }
+        
+        .grid .total {
+            height: 30px;
+            line-height: 30px;
+            background-color: #F3DCAB;
+            border-top: 1px solid #C2D89A;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="grid">
+            <div>
+                <h1>图书管理</h1>
+                <div class="book">
+                    <div>
+                        <label for="id"> 编号： </label> <input type="text" id="id" disabled v-model="id" />
+                        <label for="name"> 名称： </label>
+                        <input type="text" id="name" v-model="name" v-focus /> <button @click="add" :disabled="isSubmit">提交</button>
+                    </div>
+                </div>
+            </div>
+            <div class="total"><span>图书总数：</span> <span>{{books.length}}</span>
+                <span>计算属性：</span> <span>{{getSum}}</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>名称</th>
+                        <th>时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in books" :k="item.id">
+                        <td>{{item.id}}</td>
+                        <td>{{item.name}}</td>
+                        <td>{{item.date | dateformat("yyyy-MM-DD hh:mm:ss")}}</td>
+                        <td><a href="" @click.prevent="edit(item.id)">修改</a> <span>|</span> <a href="" @click.prevent="del(item.id)">删除</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="./vue.js"></script>
+    <script>
+        //自定义指令  文本框聚焦
+        Vue.directive("focus", {
+                inserted: function(el) {
+                    el.focus()
+                }
+            })
+            // 时间过滤器
+        Vue.filter("dateformat", function(val, param) {
+            // console.log(val); val参数1是要过滤的数据  参数2param是用户传递的参数
+            const date = new Date(val);
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const h = date.getHours();
+            const m = date.getMinutes();
+            const s = date.getSeconds();
+            // console.log(day);
+            if (param == "yyyy") {
+                return `${year}`;
+            } else if (param == "yyyy-MM-DD") {
+                return `${year}-${month}-${day}`;
+            } else if (param == "yyyy-MM-DD hh:mm:ss") {
+                return `${year}-${month}-${day} ${h}:${m}:${s}`;
+            }
+        });
+        new Vue({
+            el: "#app",
+            data: {
+                id: "",
+                name: "",
+                isEdit: false,
+                isSubmit: false,
+                books: []
+            },
+            // 计算属性，计算图书总数，形式上是函数，可以当做属性来使用
+            computed: {
+                getSum: function() {
+                    return this.books.length
+                }
+            },
+            //生命周期created()获取ajax请求获取数据,钩子函数
+            created() {
+                const data = [{
+                    id: 1,
+                    name: "三国演义",
+                    date: new Date()
+                }, {
+                    id: 2,
+                    name: "水浒传",
+                    date: new Date()
+                }, {
+                    id: 3,
+                    name: "西游记",
+                    date: new Date()
+                }, {
+                    id: 4,
+                    name: "红楼梦",
+                    date: new Date()
+                }]
+                this.books = data
+            },
+            //侦听器，侦听文本框中的name
+            watch: {
+                name: function(val) {
+                    this.isSubmit = this.books.some(item => item.name == val)
+                }
+            },
+            methods: {
+                add() {
+                    if (this.isEdit == false) {
+                        if (!this.name) {
+                            return alert("图书名字不能为空")
+                        }
+                        this.books.push({
+                            id: this.books.length ? this.books[this.books.length - 1].id + 1 : 1,
+                            name: this.name,
+                            date: new Date()
+                        })
+                    } else {
+                        this.books.some((item) => {
+                            if (this.id == item.id) {
+                                item.name = this.name
+                            }
+                        })
+                        this.isEdit = false
+                    }
+
+                    this.id = this.name = ""
+                },
+                del(id) {
+                    const index = this.books.findIndex((item) => {
+                        return id == item.id
+                    })
+                    this.books.splice(index, 1)
+                },
+                edit(id) {
+                    this.isEdit = true
+                        // console.log(id);
+                    const res = this.books.filter((item) => {
+                            return item.id == id
+                        })
+                        // console.log(res);
+                    this.id = res[0].id
+                    this.name = res[0].name
+                }
+            },
+        });
+    </script>
+</body>
+
+</html>

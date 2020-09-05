@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id='app'>
+        日期是:{{time | dateformdata}}
+    </div>
+    <script src='./vue.js'></script>
+    <script>
+        Vue.filter("dateformdata", function(val) {
+            // console.log(val);
+            // var date = new Date(val)
+            // console.log(date);
+            var y = val.getFullYear()
+            var m = val.getMonth() + 1
+            var d = val.getDate()
+                // console.log(d);
+
+            return `${y}-${m}-${d}`
+        })
+        new Vue({
+            el: '#app',
+            data: {
+                time: new Date()
+            },
+            methods: {},
+        })
+    </script>
+</body>
+
+</html>
