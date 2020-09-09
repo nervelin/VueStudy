@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id='app'>
+        <button @click="del()">删除</button>
+        <button @click="add()">新增</button>
+        <button @click="edit()">修改</button>
+        <li v-for="item in list" :k="item.id">{{item.name}}</li>
+    </div>
+    <script src='./vue.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        axios.defaults.baseURL = "http://localhost:3000"
+        axios.defaults.headers.common['Authorization'] = AUTH_TOKEN
+        new Vue({
+            el: '#app',
+            data: {
+                list: []
+            },
+            methods: {
+                // 删除id为3的数据
+                del() {
+                    axios.delete("/fruits/3").then(res => {
+                        console.log(res.data);
+                    })
+                },
+                // 发送post请求的时候需要携带参数
+                add() {
+                    axios.post("/fruits", {
+                        name: "西瓜"
+                    }).then(res => {
+                        console.log(res.data);
+                    })
+                },
+                // 修改id为3的数据
+                edit() {
+                    axios.put("/fruits/3", {
+                        name: "草莓"
+                    }).then(res => {
+                        console.log(res.data);
+                    })
+                }
+            },
+            created() {
+                axios.get("/fruits").then(res => {
+                    // console.log(res.data);
+                    this.list = res.data
+                })
+            }
+        })
+    </script>
+</body>
+
+</html>

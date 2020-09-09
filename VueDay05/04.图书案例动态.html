@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style type="text/css">
+        .grid {
+            margin: auto;
+            width: 530px;
+            text-align: center;
+        }
+        
+        .grid table {
+            border-top: 1px solid #C2D89A;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .grid th,
+        td {
+            padding: 10;
+            border: 1px dashed #F3DCAB;
+            height: 35px;
+            line-height: 35px;
+        }
+        
+        .grid th {
+            background-color: #F3DCAB;
+        }
+        
+        .grid .book {
+            padding-bottom: 10px;
+            padding-top: 5px;
+            background-color: #F3DCAB;
+        }
+        
+        .grid .total {
+            height: 30px;
+            line-height: 30px;
+            background-color: #F3DCAB;
+            border-top: 1px solid #C2D89A;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="grid">
+            <div>
+                <h1>图书管理</h1>
+                <div class="book">
+                    <div>
+                        <label for="id"> 编号： </label> <input type="text" id="id" disabled v-model="id" />
+                        <label for="name"> 名称： </label>
+                        <input type="text" id="name" v-model="name" v-focus /> <button @click="add" :disabled="isSubmit">提交</button>
+                    </div>
+                </div>
+            </div>
+            <div class="total"><span>图书总数：</span> <span>{{books.length}}</span>
+                <span>计算属性：</span> <span>{{getSum}}</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>名称</th>
+                        <th>时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in books" :k="item.id">
+                        <td>{{item.id}}</td>
+                        <td>{{item.name}}</td>
+                        <td>{{item.date | dateformat("yyyy-MM-DD hh:mm:ss")}}</td>
+                        <td><a href="" @click.prevent="edit(item.id)">修改</a> <span>|</span> <a href="" @click.prevent="del(item.id)">删除</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="./vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // 设置基地址
+        axios.defaults.baseURL = 'http://localhost:3000/';
+        // 设置响应拦截器
+        axios.interceptors.response.use(function(response) {
+            return response.data;
+        }, function(error) {
+            return Promise.reject(error);
+        });
+        //自定义指令  文本框聚焦
+        Vue.directive("focus", {
+                inserted: function(el) {
+                    el.focus()
+                }
+            })
+            // 时间过滤器
+        Vue.filter("dateformat", function(val, param) {
+            // console.log(val); val参数1是要过滤的数据  参数2param是用户传递的参数
+            const date = new Date(val);
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const h = date.getHours();
+            const m = date.getMinutes();
+            const s = date.getSeconds();
+            // console.log(day);
+            if (param == "yyyy") {
+                return `${year}`;
+            } else if (param == "yyyy-MM-DD") {
+                return `${year}-${month}-${day}`;
+            } else if (param == "yyyy-MM-DD hh:mm:ss") {
+                return `${year}-${month}-${day} ${h}:${m}:${s}`;
+            }
+        });
+        new Vue({
+            el: "#app",
+            data: {
+                id: "",
+                name: "",
+                isEdit: false,
+                isSubmit: false,
+                books: []
+            },
+            // 计算属性，计算图书总数，形式上是函数，可以当做属性来使用
+            computed: {
+                getSum: function() {
+                    return this.books.length
+                }
+            },
+            //生命周期created()获取ajax请求获取数据,钩子函数
+            async created() {
+                // 发送get请求获取数据
+                // this.books = await axios.get("books")
+                this.getBooks()
+            },
+            //侦听器，侦听文本框中的name
+            watch: {
+                name: async function(val) {
+                    // this.isSubmit = this.books.some(item => item.name == val)
+                    const res = await axios.get("books/book/" + val)
+                    this.isSubmit = res.status == 1 ? true : false
+                }
+            },
+            methods: {
+                // 单独封装一个获取获取数据的函数
+                async getBooks() {
+                    this.books = await axios.get("books")
+                },
+                async add() {
+                    if (this.isEdit == false) {
+                        if (!this.name) {
+                            return alert("图书名字不能为空")
+                        }
+                        // this.books.push({
+                        //     id: this.books.length ? this.books[this.books.length - 1].id + 1 : 1,
+                        //     name: this.name,
+                        //     date: new Date()
+                        // })
+                        // 发送请求添加数据
+                        const res = await axios.post("books", {
+                            name: this.name
+                        })
+                        if (res.status == 200) {
+                            this.getBooks()
+                        }
+                    } else {
+                        // this.books.some((item) => {
+                        //     if (this.id == item.id) {
+                        //         item.name = this.name
+                        //     }
+                        // })
+                        // 发送请求修改
+                        const res = await axios.put("books/" + this.id, {
+                            name: this.name
+                        })
+                        if (res.status == 200) {
+                            this.getBooks()
+                        }
+                        this.isEdit = false
+                    }
+
+                    this.id = this.name = ""
+                },
+                async del(id) {
+                    const res = await axios.delete("books/" + id)
+                    if (res.status == 200) {
+                        this.getBooks()
+                    }
+                },
+                async edit(id) {
+                    this.isEdit = true
+                        // const res = this.books.filter((item) => {
+                        //         return item.id == id
+                        //     })
+                        // this.id = res[0].id
+                        // this.name = res[0].name
+                        // 根据id查询图书  是一个对象
+                    const res = await axios.get("books/" + id)
+                    this.id = res.id
+                    this.name = res.name
+                }
+            },
+        });
+    </script>
+</body>
+
+</html>

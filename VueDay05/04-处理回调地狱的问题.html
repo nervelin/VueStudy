@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script src="./jquery-3.5.1.min.js"></script>
+    <script>
+        // 封装一个promise函数
+        function request(url) {
+            return new Promise((reslove, reject) => {
+                $.ajax({
+                    url: url,
+                    success(data) {
+                        reslove(data)
+                    },
+                    error(err) {
+                        reject(err)
+                    }
+                })
+            })
+        }
+        async function fn() {
+            const res1 = await request("http://localhost:3000/data")
+            const res2 = await request("http://localhost:3000/data1")
+            const res3 = await request("http://localhost:3000/data2")
+            console.log(res1);
+            console.log(res2);
+            console.log(res3);
+        }
+        fn()
+            // 调用request函数处理回调地狱
+            // request("http://localhost:3000/data").then(data => {
+            //     console.log(data);
+            //     return request("http://localhost:3000/data1")
+            //         // 此处的.then应该是上一个Promise对象调用的
+            // }).then(data => {
+            //     console.log(data);
+            //     return request("http://localhost:3000/data2")
+            // }).then(data => {
+            //     console.log(data);
+            // })
+    </script>
+</body>
+
+</html>
