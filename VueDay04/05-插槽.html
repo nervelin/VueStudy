@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id='app'>
+        <com-a>插槽内容</com-a>
+        <com-a></com-a>
+
+    </div>
+    <script src='./vue.js'></script>
+    <script>
+        Vue.component("com-a", {
+            data() {
+                return {
+
+                }
+            },
+            template: `<div>组件com-a <slot>默认值</slot></div>`
+        })
+        new Vue({
+            el: '#app',
+            data: {},
+            methods: {},
+        })
+    </script>
+</body>
+
+</html>

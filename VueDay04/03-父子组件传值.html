@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id='app'>
+        <!-- 1、父组件先传值 属性绑定，用一个属性先传值 -->
+        <com-a :message="msg" :obj="pobj"></com-a>
+    </div>
+    <script src='./vue.js'></script>
+    <script>
+        Vue.component("com-a", {
+            // 2、在子组件定义的位置上，用props属性来接收来自父组件的数据,props是在一个数组
+            props: ["message", "obj"],
+            data() {
+                return {
+                    msg1: "子组件的数据"
+                }
+            },
+            template: `<div>{{msg1}}--------{{message}}---{{obj.name}}</div>`
+        })
+        new Vue({
+            el: '#app',
+            data: {
+                msg: "来自父组件的数据",
+                pobj: {
+                    name: 'Veronica',
+                    company: 'Veridian Dynamics'
+                }
+            },
+            methods: {},
+        })
+    </script>
+</body>
+
+</html>

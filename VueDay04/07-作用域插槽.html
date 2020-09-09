@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id='app'>
+        <com-a :boo="pboo">
+            <!-- 作用域插槽，通过父组件来操作子组件的显示方式 -->
+            <template v-slot="scoped">
+                <!-- {{scoped}}是一个对象，接收过来插槽传递的数据，做了一层对象的包裹 -->
+                <!-- <p>{{scoped}}</p> -->
+                <img v-if="scoped.row==true" src="vip.jfif" alt="" width="100">
+                <img v-else src="fvip.jfif" alt="" width="100">
+            </template>
+        </com-a>
+    </div>
+    <script src='./vue.js'></script>
+    <script>
+        Vue.component("com-a", {
+            props: ["boo"],
+            data() {
+                return {
+
+                }
+            },
+            // 不想在组件中去操作数据
+            template: `<div>欢迎您：<slot :row="boo"></slot></div>`
+        })
+        new Vue({
+            el: '#app',
+            data: {
+                pboo: true
+            },
+            methods: {},
+        })
+    </script>
+</body>
+
+</html>

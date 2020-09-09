@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id='app'>
+        <p>父组件中的文字</p>
+        <com-a @handle="phandle($event)"></com-a>
+    </div>
+    <script src='./vue.js'></script>
+    <script>
+        Vue.component("com-a", {
+            data() {
+                return {
+                    msg: "子组件",
+                    mcolor: "red",
+                    bgc: "green"
+                }
+            },
+            // @click="$emit('handle',[mcolor,bgc])"   传两个参数，可以为数组或对象
+            template: `<div>{{msg}}<button @click="$emit('handle',[mcolor,bgc])">按钮</button></div>`
+        })
+        new Vue({
+            el: '#app',
+            data: {},
+            methods: {
+                phandle(parma) {
+                    console.log(parma);
+                    console.log("出发了父组件中的内容");
+                    document.querySelector("p").style.color = parma[0]
+                    document.querySelector("p").style.background = parma[1]
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>

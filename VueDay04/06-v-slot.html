@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id='app'>
+        <!-- <com-a>插槽内容</com-a> -->
+        <!-- v-slot方式使用的版本  1、v-slot只能放在组件或者template标签中  2、写法v-slot:插槽名 -->
+        <com-a v-slot:header>头部</com-a>
+        <hr>
+        <!-- <com-a>
+            v-slot can only be used on components or <template>.
+            <header v-slot:header>头部</header>
+        </com-a> -->
+        <com-a>
+            <template v-slot:header>
+                <header>头部</header>
+            </template>
+            <template #footer>
+                <footer>底部</footer>
+            </template>
+        </com-a>
+
+    </div>
+    <script src='./vue.js'></script>
+    <script>
+        Vue.component("com-a", {
+            data() {
+                return {
+
+                }
+            },
+            template: `<div><slot name="header"></slot>组件主体内容<slot name="footer"></slot></div>`
+        })
+        new Vue({
+            el: '#app',
+            data: {},
+            methods: {},
+        })
+    </script>
+</body>
+
+</html>
