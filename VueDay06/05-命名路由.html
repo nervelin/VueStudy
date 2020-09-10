@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id='app'>
+        <!-- a标签  to属性 相当于a标签 href属性 -->
+        <!--router-link属性绑定的方式，name的值一定要加引号  -->
+        <router-link :to="{name:'music',params:{id:100}}">音乐</router-link>
+        <router-link to="/movie">电影</router-link>
+        <router-link to="/news">新闻</router-link>
+        <!-- 路由占位 可以简写为单标签 -->
+        <router-view />
+    </div>
+    <!-- 1、引入vue和vue-router -->
+    <script src='./vue.js'></script>
+    <script src="./vue-router.js"></script>
+    <script>
+        // 2、创建组件
+        const music = {
+            props: ["id"],
+            template: `<div>音乐列表{{id}}</div>`
+        };
+        const movie = {
+            template: `<div>电影列表</div>`
+        };
+        const news = {
+            template: `<div>新闻列表</div>`
+        };
+        // 3、挂载路由规则，是一个数组
+        const routes = [
+                // vue重定向
+                {
+                    path: "/",
+                    redirect: "/music"
+                },
+                // path是路径，表示的是路由地址
+                {
+                    path: "/musicsfsrgftgytjuikijuhygtfdxcvbn",
+                    component: music,
+                    name: "music",
+                    props: true
+                }, {
+                    path: "/movie",
+                    component: movie
+                }, {
+                    path: "/news",
+                    component: news
+                }
+            ]
+            // 4、创建路由实例并挂载规则
+        const router = new VueRouter({
+            routes
+        })
+        new Vue({
+            el: '#app',
+            data: {},
+            methods: {},
+            // 5、将路由实例挂载给vue实例
+            router,
+        })
+    </script>
+</body>
+
+</html>
